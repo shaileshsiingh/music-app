@@ -48,7 +48,7 @@ function SongList() {
       <nav className="navbar navbar-dark navbar-expand-lg bg-dark">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            v-music
+            MVC music
           </Link>
 
           <div className="collapse navbar-collapse d-flex justify-content-center" id="navbarSupportedContent">
