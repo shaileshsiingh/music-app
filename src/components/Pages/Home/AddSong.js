@@ -1,89 +1,109 @@
 import React, { useState } from 'react';
+import { Form, Button } from 'react-bootstrap';
 
-const AddSong = () => {
-  const [songDetails, setSongDetails] = useState({
+function AddSong() {
+  const [newSong, setNewSong] = useState({
     title: '',
     artist: '',
     album: '',
     duration: '',
-    previewUrl: ''
+    url: '',
   });
+
+  const [submittedSongs, setSubmittedSongs] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSongDetails(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+    setNewSong({ ...newSong, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch('https://api.spotify.com/v1/tracks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: songDetails.title,
-          artists: [{ name: songDetails.artist }],
-          album: { name: songDetails.album },
-          duration_ms: songDetails.duration * 1000, // Assuming duration is in seconds
-          preview_url: songDetails.previewUrl
-        })
-      });
-      
-      if (response.ok) {
-        // Song successfully added
-        console.log('Song added successfully!');
-        alert('Song added successfully!')
-      } else {
-        // Handle error
-        console.error('Failed to add song:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error adding song:', error);
-    }
-
-    // Reset form fields after submission
-    setSongDetails({
+    // Add logic to save new song to state or API
+    console.log('New song added:', newSong);
+    setSubmittedSongs([...submittedSongs, newSong]);
+    // Clear the form fields
+    setNewSong({
       title: '',
       artist: '',
       album: '',
       duration: '',
-      previewUrl: ''
+      url: '',
     });
   };
 
   return (
-    <div className="container mt-4">
-      <h2>Add a Song</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="title" className="form-label">Title</label>
-          <input type="text" className="form-control" id="title" name="title" value={songDetails.title} onChange={handleChange} required />
+    <div>
+      <h2>Add New Song</h2>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="formTitle">
+          <Form.Label>Title:</Form.Label>
+          <Form.Control
+            type="text"
+            name="title"
+            value={newSong.title}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group controlId="formArtist">
+          <Form.Label>Artist:</Form.Label>
+          <Form.Control
+            type="text"
+            name="artist"
+            value={newSong.artist}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group controlId="formAlbum">
+          <Form.Label>Album:</Form.Label>
+          <Form.Control
+            type="text"
+            name="album"
+            value={newSong.album}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group controlId="formDuration">
+          <Form.Label>Duration:</Form.Label>
+          <Form.Control
+            type="text"
+            name="duration"
+            value={newSong.duration}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group controlId="formUrl">
+          <Form.Label>Song URL:</Form.Label>
+          <Form.Control
+            type="text"
+            name="url"
+            value={newSong.url}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Add Song
+        </Button>
+      </Form>
+      {/* Display submitted songs */}
+      {submittedSongs.length > 0 && (
+        <div>
+          <h3>Submitted Songs</h3>
+          <ul>
+            {submittedSongs.map((song, index) => (
+              <li key={index}>
+                <p>Title: {song.title}</p>
+                <p>Artist: {song.artist}</p>
+                <p>Album: {song.album}</p>
+                <p>Duration: {song.duration}</p>
+                <p>Song URL: {song.url}</p>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="mb-3">
-          <label htmlFor="artist" className="form-label">Artist</label>
-          <input type="text" className="form-control" id="artist" name="artist" value={songDetails.artist} onChange={handleChange} required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="album" className="form-label">Album</label>
-          <input type="text" className="form-control" id="album" name="album" value={songDetails.album} onChange={handleChange} required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="duration" className="form-label">Duration (seconds)</label>
-          <input type="number" className="form-control" id="duration" name="duration" value={songDetails.duration} onChange={handleChange} required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="previewUrl" className="form-label">Preview URL</label>
-          <input type="url" className="form-control" id="previewUrl" name="previewUrl" value={songDetails.previewUrl} onChange={handleChange} required />
-        </div>
-        <button type="submit" className="btn btn-primary">Add Song</button>
-      </form>
+      )}
     </div>
   );
-};
+}
 
 export default AddSong;
