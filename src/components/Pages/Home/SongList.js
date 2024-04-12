@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { useDispatch } from 'react-redux';
 import { authAction } from "../../storeRedux/authReducer";
 import { Link } from 'react-router-dom';
@@ -9,6 +9,7 @@ function SongList() {
   const [keyword, setKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [tracks, setTracks] = useState([]);
+  const [trendingTracks, setTrendingTracks] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -18,13 +19,27 @@ function SongList() {
 
   const getTracks = async () => {
     setIsLoading(true);
-    let data = await fetch(
-      ` https://v1.nocodeapi.com/shaileshsiingh/spotify/BLkUlnySvCMuedsY/search?q=${keyword === "" ? "trending" : keyword}&type=track`
-    );
+    let url;
+    if (keyword === "") {
+      // Fetch trending songs
+      url = 'https://v1.nocodeapi.com/shaileshsiingh/spotify/BLkUlnySvCMuedsY/search?q=trending&type=track';
+    } else {
+      // Fetch songs based on the search keyword
+      url = `https://v1.nocodeapi.com/shaileshsiingh/spotify/BLkUlnySvCMuedsY/search?q=${keyword}&type=track`;
+    }
+    let data = await fetch(url);
     let convertedData = await data.json();
-    setTracks(convertedData.tracks.items);
+    if (keyword === "") {
+      setTrendingTracks(convertedData.tracks.items);
+    } else {
+      setTracks(convertedData.tracks.items);
+    }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    getTracks();
+  }, []); // Fetch trending songs on initial render
 
  
 
@@ -60,17 +75,27 @@ function SongList() {
             </div>
           </div>
         </div>
-        <div className={`row ${keyword === "" ? "trending" : "d-none"}`}>
+        <div className={`row ${keyword === "" ? "" : "d-none"}`}>
           <div className="col-12 py-5 text-center">
-            <h1>Search your Song above</h1>
+            <h1>Trending Songs</h1>
+          </div>
+          <div className="row">
+            {trendingTracks.map((element) => (
+              <LazyCard key={element.id} track={element}  />
+            ))}
           </div>
         </div>
-        <div className="row">
+        <div className={`row ${keyword === "" ? "d-none" : ""}`}>
+          <div className="col-12 py-5 text-center">
+            <h1>Search Results</h1>
+          </div>
+          <div className="row">
           <Suspense fallback={<div>Loading...</div>}>
             {tracks.map((element) => (
               <LazyCard key={element.id} track={element} />
             ))}
           </Suspense>
+        </div>
         </div>
       </div>
     </>
