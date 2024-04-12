@@ -9,8 +9,9 @@ const LazyCard = ({ track }) => {
           <h5 className="card-title">{track.name}</h5>
           <div className="d-flex justify-content-between align-items-center">
             <p className="card-text mb-0">Artist: {track.album.artists[0].name}</p>
+
           </div>
-          <p className="card-text">Release date: {track.album.release_date}</p>
+          <p className="card-text">Album: {track.album.name}</p>
           <audio src={track.preview_url} controls className="w-100"></audio>
         </div>
       </div>
