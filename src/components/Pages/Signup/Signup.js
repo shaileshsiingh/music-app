@@ -62,6 +62,8 @@ const passwordChangeHandler =(e)=>{
             alert(data.error.message)
         }else{
             localStorage.setItem('token',data.idToken);
+            redirect('/')
+
             console.log('sign up successfully');
             localStorage.setItem('email',email)
             dispatch(authAction.login())

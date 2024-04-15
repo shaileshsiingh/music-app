@@ -22,23 +22,27 @@ function SongList() {
     let url;
     if (keyword === "") {
       // Fetch trending songs
-      url = 'https://v1.nocodeapi.com/shaileshsiingh/spotify/BLkUlnySvCMuedsY/search?q=trending&type=track';
+      url = 'https://v1.nocodeapi.com/shaipatel/spotify/YjfOJINRVKDQdtCs/search?q=trending&type=track';
     } else {
       // Fetch songs based on the search keyword
-      url = `https://v1.nocodeapi.com/shaileshsiingh/spotify/BLkUlnySvCMuedsY/search?q=${keyword}&type=track`;
+      url = `https://v1.nocodeapi.com/shaipatel/spotify/YjfOJINRVKDQdtCs/search?q=${keyword}&type=track`;
     }
     let data = await fetch(url);
     let convertedData = await data.json();
-    if (keyword === "") {
-      setTrendingTracks(convertedData.tracks.items);
-    } else {
-      setTracks(convertedData.tracks.items);
+    if (convertedData && convertedData.tracks) {
+      if (keyword === "") {
+        setTrendingTracks(convertedData.tracks.items || []);
+      } else {
+        setTracks(convertedData.tracks.items || []);
+      }
     }
     setIsLoading(false);
   };
+  
 
   useEffect(() => {
     getTracks();
+    // eslint-disable-next-line
   }, []); // Fetch trending songs on initial render
 
  
