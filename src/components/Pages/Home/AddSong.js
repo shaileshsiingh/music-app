@@ -1,41 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function AddSong() {
-  const [title, setTitle] = useState('')
-  const [artist, setArtist] = useState('')
-  const [album, setAlbum] = useState('')
-  const [duration, setDuration] = useState('')
-  const [songFile, setSongFile] = useState(null)
-  const [uploadedSongs, setUploadedSongs] = useState([])
-  const [searchedSong, setSearchedSong] = useState(null)
-  const [error, setError] = useState('')
+  const [title, setTitle] = useState('');
+  const [artist, setArtist] = useState('');
+  const [album, setAlbum] = useState('');
+  const [duration, setDuration] = useState('');
+  const [songFile, setSongFile] = useState(null);
+  const [uploadedSongs, setUploadedSongs] = useState([]);
+  const [searchedSong, setSearchedSong] = useState(null);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const savedSongs = JSON.parse(localStorage.getItem('uploadedSongs'));
+    if (savedSongs) {
+      setUploadedSongs(savedSongs);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('uploadedSongs', JSON.stringify(uploadedSongs));
+  }, [uploadedSongs]);
 
   const handleTitleChange = (event) => {
-    setTitle(event.target.value)
+    setTitle(event.target.value);
   };
 
   const handleArtistChange = (event) => {
-    setArtist(event.target.value)
+    setArtist(event.target.value);
   };
 
   const handleAlbumChange = (event) => {
-    setAlbum(event.target.value)
+    setAlbum(event.target.value);
   };
 
   const handleDurationChange = (event) => {
-    setDuration(event.target.value)
+    setDuration(event.target.value);
   };
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0]
-    setSongFile(file)
+    const file = event.target.files[0];
+    setSongFile(file);
   };
 
   const validateForm = () => {
     if (!title || !artist || !album || !duration || !songFile) {
-      setError('All fields are required.')
-      alert('All fields are required.')
-
+      setError('All fields are required.');
       return false;
     }
     setError('');
@@ -43,9 +52,8 @@ function AddSong() {
   };
 
   const handleUpload = () => {
-    if (!validateForm()) return
+    if (!validateForm()) return;
 
-  
     const uploadedSongDetails = {
       title: title,
       artist: artist,
@@ -53,22 +61,21 @@ function AddSong() {
       duration: duration,
       url: songFile ? URL.createObjectURL(songFile) : '',
     };
-    setUploadedSongs([...uploadedSongs, uploadedSongDetails])
-    setTitle('')
-    setArtist('')
-    setAlbum('')
-    setDuration('')
-    setSongFile(null)
+    setUploadedSongs([...uploadedSongs, uploadedSongDetails]);
+    setTitle('');
+    setArtist('');
+    setAlbum('');
+    setDuration('');
+    setSongFile(null);
   };
 
   const handleSearch = (query) => {
-    //search logic
-    const result = uploadedSongs.find(song => song.title.toLowerCase() === query.toLowerCase())
-    setSearchedSong(result)
+    const result = uploadedSongs.find(song => song.title.toLowerCase() === query.toLowerCase());
+    setSearchedSong(result);
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ backgroundColor: '#f0f0f0' }}>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
           <a className="navbar-brand" href="/">Home</a>

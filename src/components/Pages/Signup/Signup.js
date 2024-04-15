@@ -65,7 +65,6 @@ const passwordChangeHandler =(e)=>{
             console.log('sign up successfully');
             localStorage.setItem('email',email)
             dispatch(authAction.login())
-            redirect('/')
         }
       
     }
