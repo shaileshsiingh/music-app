@@ -8,16 +8,17 @@ import AddSong from './components/Pages/Home/AddSong';
 
 function App() {
   const isAuth = useSelector(state => state.auth.isAuthenicate);
-  
+
   return (
     <Fragment>
       <Routes>
+        <Route path='/' element={isAuth ? <SongList /> : <SignUp />} />
         <Route path='/song-list' element={isAuth ? <SongList /> : <SignUp />} />
         <Route path='/add-songs' element={isAuth ? <AddSong /> : <SignUp />} />
 
 
 
-        <Route path='/' element={isAuth ? <SongList />: <SignUp />} />
+
       </Routes>
     </Fragment>
   );

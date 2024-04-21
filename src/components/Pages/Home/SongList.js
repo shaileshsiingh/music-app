@@ -38,14 +38,14 @@ function SongList() {
     }
     setIsLoading(false);
   };
-  
+
 
   useEffect(() => {
     getTracks();
     // eslint-disable-next-line
   }, []); // Fetch trending songs on initial render
 
- 
+
 
   return (
     <>
@@ -54,22 +54,29 @@ function SongList() {
           <Link className="navbar-brand" to="/">
             MVC music
           </Link>
-
-          <div className="collapse navbar-collapse d-flex justify-content-center" id="navbarSupportedContent">
-            <input
-              value={keyword}
-              onChange={(event) => setKeyword(event.target.value)}
-              className="form-control me-2 w-75"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button onClick={getTracks} className="btn btn-outline-success">Search</button>
-            <button onClick={logoutHandler} className="btn btn-outline-success">Logout</button>
-            <Link to="/add-songs" className="btn btn-outline-success">Add song</Link>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+            <div className="d-flex">
+              <input
+                value={keyword}
+                onChange={(event) => setKeyword(event.target.value)}
+                className="form-control me-2"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <button onClick={getTracks} className="btn btn-outline-success me-2">Search</button>
+            </div>
+            <div className="d-flex">
+              <button onClick={logoutHandler} className="btn btn-outline-success me-2">Logout</button>
+              <Link to="/add-songs" className="btn btn-outline-success">Add song</Link>
+            </div>
           </div>
         </div>
       </nav>
+
 
       <div className="container">
         <div className={`row ${isLoading ? "" : "d-none"}`}>
@@ -85,7 +92,7 @@ function SongList() {
           </div>
           <div className="row">
             {trendingTracks.map((element) => (
-              <LazyCard key={element.id} track={element}  />
+              <LazyCard key={element.id} track={element} />
             ))}
           </div>
         </div>
@@ -94,12 +101,12 @@ function SongList() {
             <h1>Search Results</h1>
           </div>
           <div className="row">
-          <Suspense fallback={<div>Loading...</div>}>
-            {tracks.map((element) => (
-              <LazyCard key={element.id} track={element} />
-            ))}
-          </Suspense>
-        </div>
+            <Suspense fallback={<div>Loading...</div>}>
+              {tracks.map((element) => (
+                <LazyCard key={element.id} track={element} />
+              ))}
+            </Suspense>
+          </div>
         </div>
       </div>
     </>

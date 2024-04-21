@@ -1,54 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 function AddSong() {
-  const [title, setTitle] = useState('');
-  const [artist, setArtist] = useState('');
-  const [album, setAlbum] = useState('');
-  const [duration, setDuration] = useState('');
-  const [songFile, setSongFile] = useState(null);
-  const [uploadedSongs, setUploadedSongs] = useState([]);
-  const [searchedSong, setSearchedSong] = useState(null);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    const savedSongs = JSON.parse(localStorage.getItem('uploadedSongs'));
-    if (savedSongs) {
-      setUploadedSongs(savedSongs);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('uploadedSongs', JSON.stringify(uploadedSongs));
-  }, [uploadedSongs]);
+  const [title, setTitle] = useState('')
+  const [artist, setArtist] = useState('')
+  const [album, setAlbum] = useState('')
+  const [duration, setDuration] = useState('')
+  const [songFile, setSongFile] = useState(null)
+  const [uploadedSongs, setUploadedSongs] = useState([])
+  const [searchedSong, setSearchedSong] = useState(null)
+  const [error, setError] = useState('')
 
   const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
+    setTitle(event.target.value)
+  }
 
   const handleArtistChange = (event) => {
-    setArtist(event.target.value);
-  };
+    setArtist(event.target.value)
+  }
 
   const handleAlbumChange = (event) => {
-    setAlbum(event.target.value);
-  };
+    setAlbum(event.target.value)
+  }
 
   const handleDurationChange = (event) => {
-    setDuration(event.target.value);
-  };
+    setDuration(event.target.value)
+  }
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    setSongFile(file);
+    setSongFile(file)
   };
 
   const validateForm = () => {
     if (!title || !artist || !album || !duration || !songFile) {
-      setError('All fields are required.');
+      setError('All fields are required.')
+      alert('All fields are required with new file.')
+
       return false;
     }
-    setError('');
-    return true;
+    setError('')
+    return true
   };
 
   const handleUpload = () => {
@@ -69,9 +60,15 @@ function AddSong() {
     setSongFile(null);
   };
 
+  const handleDelete = (index) => {
+    const updatedSongs = [...uploadedSongs]
+    updatedSongs.splice(index, 1)
+    setUploadedSongs(updatedSongs)
+  };
+
   const handleSearch = (query) => {
     const result = uploadedSongs.find(song => song.title.toLowerCase() === query.toLowerCase());
-    setSearchedSong(result);
+    setSearchedSong(result)
   };
 
   return (
@@ -106,23 +103,23 @@ function AddSong() {
       <div className="mb-3">
         <h2>Add a New Song</h2>
         <label htmlFor="title" className="form-label">Title:</label>
-        <input type="text" className="form-control" id="title" value={title} onChange={handleTitleChange} style={{ width: '50%' }} />
+        <input type="text" className="form-control" id="title" required value={title} onChange={handleTitleChange} style={{ width: '50%' }} />
       </div>
       <div className="mb-3">
         <label htmlFor="artist" className="form-label">Artist:</label>
-        <input type="text" className="form-control" id="artist" value={artist} onChange={handleArtistChange} style={{ width: '50%' }} />
+        <input type="text" className="form-control" id="artist" required value={artist} onChange={handleArtistChange} style={{ width: '50%' }} />
       </div>
       <div className="mb-3">
         <label htmlFor="album" className="form-label">Album:</label>
-        <input type="text" className="form-control" id="album" value={album} onChange={handleAlbumChange} style={{ width: '50%' }} />
+        <input type="text" className="form-control" id="album" required value={album} onChange={handleAlbumChange} style={{ width: '50%' }} />
       </div>
       <div className="mb-3">
         <label htmlFor="duration" className="form-label">Duration:</label>
-        <input type="text" className="form-control" id="duration" value={duration} onChange={handleDurationChange} style={{ width: '50%' }} />
+        <input type="number" className="form-control" id="duration" required value={duration} onChange={handleDurationChange} style={{ width: '50%' }} />
       </div>
       <div className="mb-3">
-        <label htmlFor="file" className="form-label">File:</label>
-        <input type="file" className="form-control" id="file" onChange={handleFileChange} accept="audio/*" style={{ width: '50%' }} />
+        <label htmlFor="file" className="form-label">Upload a new File:</label>
+        <input type="file" className="form-control" id="file" required onChange={handleFileChange} accept="audio/*" style={{ width: '50%' }} />
       </div>
       {error && <div className="alert alert-danger">{error}</div>}
       <button className="btn btn-primary mb-3" onClick={handleUpload}>Upload</button>
@@ -138,6 +135,7 @@ function AddSong() {
                 <p className="card-text">Album: {song.album}</p>
                 <p className="card-text">Duration: {song.duration}</p>
                 <audio src={song.url} controls></audio>
+                <button className="btn btn-danger mt-2" onClick={() => handleDelete(index)}>Delete</button>
               </div>
             </div>
           </div>
